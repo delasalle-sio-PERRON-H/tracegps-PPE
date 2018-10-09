@@ -69,32 +69,51 @@ class OutilsTest extends PHPUnit_Framework_TestCase
         self::assertEquals($uneVilleApres, 'St MALO');
     }
 
-    public function testEstUneDateValide()
+    public function testEstUnCodePostalValide()
     {
         $unCP = '35000';
-        assertTrue(Outils::estUnCodePostalValide($unCP));
+        self::assertTrue(Outils::estUnCodePostalValide($unCP));
         $unCP = '3500';
         self::assertFalse(Outils::estUnCodePostalValide($unCP));
     }
 
     public function testEstUneAdrMailValide()
     {
-
+        $uneAdrMail = 'sophie.fonfec@gmail.com';
+        self::assertTrue(Outils::estUneAdrMailValide($uneAdrMail));
+        $uneAdrMail = 'sophie.fonfec@gmailcom';
+        self::assertFalse(Outils::estUneAdrMailValide($uneAdrMail));
+        $uneAdrMail = 'sophie.fonfecgmail.com';
+        self::assertFalse(Outils::estUneAdrMailValide($uneAdrMail));
     }
 
-    public function testEnvoyerMail()
+    public function testEstUneDateValide()
     {
-
-    }
-
-    public function testEstUnCodePostalValide()
-    {
-
+        $uneDate = '31/13/2016';
+        self::assertFalse(Outils::estUneDateValide($uneDate));
+        $uneDate = '31/12/2016';
+        self::assertTrue(Outils::estUneDateValide($uneDate));
+        $uneDate = '29/02/2015';
+        self::assertFalse(Outils::estUneDateValide($uneDate));
+        $uneDate = '29/02/2016';
+        self::assertTrue(Outils::estUneDateValide($uneDate));
     }
 
     public function testEstUnNumTelValide()
     {
 
+        $unNumero = '1122334455';
+        self::assertTrue(Outils::estUnNumTelValide($unNumero));
+        $unNumero = '112233445';
+        self::assertFalse(Outils::estUnNumTelValide($unNumero));
+        $unNumero = '11.22.33.44.55';
+        self::assertTrue(Outils::estUnNumTelValide($unNumero));
+        $unNumero = '11,22,33,44,55';
+        self::assertFalse(Outils::estUnNumTelValide($unNumero));
+        $unNumero = '11-22-33-44-55';
+        self::assertTrue(Outils::estUnNumTelValide($unNumero));
+        $unNumero = '11/22/33/44/55';
+        self::assertTrue(Outils::estUnNumTelValide($unNumero));
     }
 
 }
