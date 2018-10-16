@@ -37,11 +37,11 @@
 
 
 // certaines méthodes nécessitent les classes suivantes :
-include_once('Utilisateur.class.php');
-include_once('Trace.class.php');
-include_once('PointDeTrace.class.php');
-include_once('Point.class.php');
-include_once('Outils.class.php');
+include_once('../Utilisateur.class.php');
+include_once('../Trace.class.php');
+include_once('../PointDeTrace.class.php');
+include_once('../Point.class.php');
+include_once('../Outils.class.php');
 
 // inclusion des paramètres de l'application
 include_once('parametres.php');
@@ -359,6 +359,8 @@ class DAO
 
     public function getLesPointsDeTrace($idTrace)
     {
+        $pointsDeTrace = [];
+
         $txt_req = /** @lang SQL */
             "
             select idTrace, id, latitude, longitude, altitude, dateHeure, rythmeCardio
@@ -371,31 +373,61 @@ class DAO
         $req->execute();
         $uneLigne = $req->fetch(PDO::FETCH_OBJ);
 
-        // construction d'une collection d'objets Utilisateur
-        $lesUtilisateurs = array();
         // tant qu'une ligne est trouvée :
         while ($uneLigne) {
             // création d'un objet Utilisateur
+            $unIdTrace = utf8_encode($uneLigne->idTrace);
             $unId = utf8_encode($uneLigne->id);
-            $unPseudo = utf8_encode($uneLigne->pseudo);
-            $unMdpSha1 = utf8_encode($uneLigne->mdpSha1);
-            $uneAdrMail = utf8_encode($uneLigne->adrMail);
-            $unNumTel = utf8_encode($uneLigne->numTel);
-            $unNiveau = utf8_encode($uneLigne->niveau);
-            $uneDateCreation = utf8_encode($uneLigne->dateCreation);
-            $unNbTraces = utf8_encode($uneLigne->nbTraces);
-            $uneDateDerniereTrace = utf8_encode($uneLigne->dateDerniereTrace);
+            $uneLatitude = utf8_encode($uneLigne->latitude);
+            $uneLongitude = utf8_encode($uneLigne->longitude);
+            $uneAltitude = utf8_encode($uneLigne->altitude);
+            $uneDateHeure = utf8_encode($uneLigne->dateHeure);
+            $unRythmeCardio = utf8_encode($uneLigne->rythmeCardio);
 
-            $unUtilisateur = new Utilisateur($unId, $unPseudo, $unMdpSha1, $uneAdrMail, $unNumTel, $unNiveau, $uneDateCreation, $unNbTraces, $uneDateDerniereTrace);
+            if (sizeof($pointsDeTrace) == 0) {
+                $unPointDeTrace = new PointDeTrace(
+                    $unIdTrace,
+                    $unId,
+                    $uneLatitude,
+                    $uneLongitude,
+                    $uneAltitude,
+                    $uneDateHeure,
+                    $unRythmeCardio,
+                    0,
+                    0,
+                    0
+                );
+            }
+            else
+            {
+                $lastPointDeTrace = $pointsDeTrace[sizeof($pointsDeTrace)-1];
+                $unPointDeTrace = new PointDeTrace(
+                    $unIdTrace,
+                    $unId,
+                    $uneLatitude,
+                    $uneLongitude,
+                    $uneAltitude,
+                    $uneDateHeure,
+                    $unRythmeCardio,
+                    0,
+                    0,
+                    0
+                );
+
+                $unPointDeTrace->setDistanceCumulee(Point::getDistance($unPointDeTrace, $lastPointDeTrace));
+                /** @var PointDeTrace $lastPointDeTrace */
+                $unPointDeTrace->setTempsCumule($lastPointDeTrace->getTempsCumule()+($lastPointDeTrace->getDateHeure()-$unPointDeTrace->getDateHeure()));
+            }
+
             // ajout de l'utilisateur à la collection
-            $lesUtilisateurs[] = $unUtilisateur;
+            $pointsDeTrace[] = $unPointDeTrace;
             // extrait la ligne suivante
             $uneLigne = $req->fetch(PDO::FETCH_OBJ);
         }
         // libère les ressources du jeu de données
         $req->closeCursor();
         // fourniture de la collection
-        return $lesUtilisateurs;
+        return $pointsDeTrace;
     }
 
 
@@ -603,7 +635,7 @@ class DAO
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 3 (Coubrun Mickaël) : lignes 950 à 1150
     // --------------------------------------------------------------------------------------
-    public  function existeAdrMailUtilisateur($adrmail)
+    public function existeAdrMailUtilisateur($adrmail)
     {
         // préparation de la requête de recherche
         $txt_req = "Select count(*) from tracegps_utilisateurs where adrMail = :adrMail";
@@ -615,28 +647,15 @@ class DAO
         $nbReponses = $req->fetchColumn(0);
         // libère ls ressources du jeu de données
         $req->closeCursor();
-        
+
         // fourniture de la réponse
-        if ($nbReponses == 0)
-        {
+        if ($nbReponses == 0) {
             return false;
-        }
-        else 
+        } else
             return true;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
 } // fin de la classe DAO
 
 // ATTENTION : on ne met pas de balise de fin de script pour ne pas prendre le risque
