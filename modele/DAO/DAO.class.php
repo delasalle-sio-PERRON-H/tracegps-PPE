@@ -948,7 +948,7 @@ class DAO
     
    
     // --------------------------------------------------------------------------------------
-    // début de la zone attribuée au développeur 3 (xxxxxxxxxxxxxxxxxxxx) : lignes 950 à 1150
+    // début de la zone attribuée au développeur 3 (Coubrun Mickaël) : lignes 950 à 1150
     // --------------------------------------------------------------------------------------
     
     

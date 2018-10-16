@@ -398,7 +398,7 @@ else {
 
 
 // --------------------------------------------------------------------------------------
-// début de la zone attribuée au développeur 3 (xxxxxxxxxxxxxxxxxxxx) : lignes 400 à 499
+// début de la zone attribuée au développeur 3 (Coubrun Micka�l) : lignes 400 à 499
 // --------------------------------------------------------------------------------------
 
 
