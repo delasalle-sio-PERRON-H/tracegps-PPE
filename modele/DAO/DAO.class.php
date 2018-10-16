@@ -656,7 +656,7 @@ class DAO
             return false;
         } else
             return true;
-    }
+    } // fin méthode existeAdrMailUtilisateur
 
     
     // enregistre l'autorisation dans la BDD, true si enregistrer, false sinon
@@ -677,11 +677,12 @@ class DAO
         // exécution de la requête
         $ok = $req->execute();
         return $ok;
-    }
+    } // fin méthode creerUneAutorisation
     
     // vérifie que l'autorisateur autorise l'autorisé à consulter ses traces, renvoie true si l'autorisation est donnée, false sinon
     public function autoriseAConsulter($idAutorisant, $idAutorise)
-    {	// préparation de la requête de recherche
+    {	
+        // préparation de la requête de recherche
         $txt_req = "Select count(*) from tracegps_autorisations where idAutorisant = :idAutorisant and idAutorise = :idAutorise";
         $req = $this->cnx->prepare($txt_req);
         // liaison de la requête et de ses paramètres
@@ -699,7 +700,7 @@ class DAO
             return false;
             else
                 return true;
-    }
+    } // fin méthode autoriseAConsulter
 
 } // fin de la classe DAO
 
