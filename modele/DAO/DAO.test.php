@@ -402,7 +402,7 @@ else {
 // --------------------------------------------------------------------------------------
 
 // test de la méthode existeAdrMailUtilisateur ----------------------------------------------------
-// modifié par Jim le 12/8/2018
+// modifié par MC le 16/10/2018
 echo "<h3>Test de existeAdrMailUtilisateur : </h3>";
 if ($dao->existeAdrMailUtilisateur("admin@gmail.com")) $existe = "oui"; else $existe = "non";
 echo "<p>Existence de l'utilisateur 'admin@gmail.com' : <b>" . $existe . "</b><br>";
@@ -410,7 +410,7 @@ if ($dao->existeAdrMailUtilisateur("delasalle.sio.eleves@gmail.com")) $existe = 
 echo "Existence de l'utilisateur 'delasalle.sio.eleves@gmail.com' : <b>" . $existe . "</b></br>";
 
 // test de la méthode creerUneAutorisation ---------------------------------------------------------
-// modifié par Jim le 13/8/2018
+// modifié par MC le 16/10/2018
 echo "<h3>Test de creerUneAutorisation : </h3>";
 if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
 echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
@@ -418,80 +418,14 @@ echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a
 if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
 echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// test de la méthode autoriseAConsulter ----------------------------------------------------------
+// modifié par MC le 16/10/2018
+echo "<h3>Test de autoriseAConsulter : </h3>";
+if ($dao->autoriseAConsulter(2, 3)) $autorise = "oui"; else $autorise = "non";
+echo "<p>L'utilisateur 2 autorise l'utilisateur 3 : <b>" . $autorise . "</b><br>";
+
+if ($dao->autoriseAConsulter(3, 2)) $autorise = "oui"; else $autorise = "non";
+echo "<p>L'utilisateur 3 autorise l'utilisateur 2 : <b>" . $autorise . "</b><br>";
 
 
 

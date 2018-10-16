@@ -679,6 +679,27 @@ class DAO
         return $ok;
     }
     
+    // vérifie que l'autorisateur autorise l'autorisé à consulter ses traces, renvoie true si l'autorisation est donnée, false sinon
+    public function autoriseAConsulter($idAutorisant, $idAutorise)
+    {	// préparation de la requête de recherche
+        $txt_req = "Select count(*) from tracegps_autorisations where idAutorisant = :idAutorisant and idAutorise = :idAutorise";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_INT);
+        $req->bindValue("idAutorise", $idAutorise, PDO::PARAM_INT);
+        
+        // extraction des données et comptage des réponses
+        $req->execute();
+        $nbReponses = $req->fetchColumn(0);
+        // libère les ressources du jeu de données
+        $req->closeCursor();
+        
+        // fourniture de la réponse
+        if ($nbReponses == 0)
+            return false;
+            else
+                return true;
+    }
 
 } // fin de la classe DAO
 
