@@ -348,7 +348,7 @@ class DAO
     
     
     // --------------------------------------------------------------------------------------
-    // début de la zone attribuée au développeur 1 (xxxxxxxxxxxxxxxxxxxx) : lignes 350 à 549
+    // début de la zone attribuée au développeur 1 (LELU AWEN) : lignes 350 à 549
     // --------------------------------------------------------------------------------------
     
 
