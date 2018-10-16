@@ -701,6 +701,20 @@ class DAO
             else
                 return true;
     } // fin méthode autoriseAConsulter
+    // supprime l'autorisation ($idAutorisant, $idAutorise) dans la bdd, fournit true si l'effacement s'est bien effectué, false sinon
+    public function supprimerUneAutorisation($idAutorisant, $idAutorise)
+    {	
+        // préparation de la requête
+        $txt_req = "delete from tracegps_autorisations" ;
+        $txt_req .= " where idAutorisant = :idAutorisant and idAutorise = :idAutorise";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_INT);
+        $req->bindValue("idAutorise", $idAutorise, PDO::PARAM_INT);
+        // exécution de la requête
+        $ok = $req->execute();
+        return $ok;
+    } // fin méthode supprimerUneAutorisation
 
 } // fin de la classe DAO
 

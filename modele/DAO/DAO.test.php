@@ -427,6 +427,15 @@ echo "<p>L'utilisateur 2 autorise l'utilisateur 3 : <b>" . $autorise . "</b><br>
 if ($dao->autoriseAConsulter(3, 2)) $autorise = "oui"; else $autorise = "non";
 echo "<p>L'utilisateur 3 autorise l'utilisateur 2 : <b>" . $autorise . "</b><br>";
 
+// test de la méthode supprimerUneAutorisation ----------------------------------------------------
+// modifié par MC le 16/10/2018
+echo "<h3>Test de supprimerUneAutorisation : </h3>";
+// on crée une autorisation
+if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
+echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
+// puis on la supprime
+if ($dao->supprimerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
+echo "<p>La suppression de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
 
 
 
