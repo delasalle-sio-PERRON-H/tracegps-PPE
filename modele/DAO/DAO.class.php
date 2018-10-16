@@ -675,7 +675,7 @@ class DAO
         $req->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_INT);
         $req->bindValue("idAutorise", $idAutorise, PDO::PARAM_INT);
         // exécution de la requête
-        $req->execute();
+        $ok = $req->execute();
         return $ok;
     }
     
