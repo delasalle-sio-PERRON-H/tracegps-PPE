@@ -601,8 +601,10 @@ class DAO
 
 
     // --------------------------------------------------------------------------------------
-    // début de la zone attribuée au développeur 3 (Coubrun Mickaël) : lignes 950 à 1150
+    // début de la zone attribuée au développeur 4 (Coubrun Mickaël) : lignes 950 à 1150
     // --------------------------------------------------------------------------------------
+    
+    // fournit true si l'adresse mail $adrMail existe dans la table sinon false
     public  function existeAdrMailUtilisateur($adrmail)
     {
         // préparation de la requête de recherche
@@ -625,8 +627,25 @@ class DAO
             return true;
     }
     
-    
-    
+    // enregistre l'autorisation dans la BDD, true si enregistrer, false sinon
+    public  function creerUneAutorisation($idAutorisant, $idAutorise)
+    {
+        // test si l'autorisation existe déjà
+        if ($this->autoriseAConsulter($idAutorisant, $idAutorise) == true)
+        {
+            return  false;
+        }
+        // préparation de la requête
+        $txt_req = "insert into tracegps_autorisation (idAutorisant, idAutorise)";
+        $txt_req .= "values (:idAutorisant, :idAutorise)";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et ses paramètres
+        $req->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_INT);
+        $req->bindValue("idAutorise", $idAutorise, PDO::PARAM_INT);
+        // exécution de la requête
+        $req->execute();
+        return $ok;
+    }
     
     
     
