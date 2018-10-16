@@ -1,8 +1,8 @@
 <?php
 // Projet TraceGPS
 // fichier : modele/DAO.test.php
-// RÃ´le : test de la classe DAO.class.php
-// DerniÃ¨re mise Ã  jour : 15/8/2018 par JM CARTRON
+// Rôle : test de la classe DAO.class.php
+// Dernière mise à jour : 15/8/2018 par JM CARTRON
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,14 +14,14 @@
 <body>
 
 <?php
-// connexion du serveur web Ã  la base MySQL
+// connexion du serveur web à la base MySQL
 include_once ('DAO.class.php');
 //include_once ('_DAO.mysql.class.php');
 $dao = new DAO();
 
 /*
-// test de la mÃ©thode getNiveauConnexion ----------------------------------------------------------
-// modifiÃ© par Jim le 12/8/2018
+// test de la méthode getNiveauConnexion ----------------------------------------------------------
+// modifié par Jim le 12/8/2018
 echo "<h3>Test de getNiveauConnexion : </h3>";
 $niveau = $dao->getNiveauConnexion("admin", sha1("mdpadmin"));
 echo "<p>Niveau de ('admin', 'mdpadmin') : " . $niveau . "</br>";
@@ -38,8 +38,8 @@ echo "<p>Niveau de ('toto', 'mdputilisateur') : " . $niveau . "</br>";
 
 
 /*
-// test de la mÃ©thode existePseudoUtilisateur -----------------------------------------------------
-// modifiÃ© par Jim le 12/8/2018
+// test de la méthode existePseudoUtilisateur -----------------------------------------------------
+// modifié par Jim le 12/8/2018
 echo "<h3>Test de existePseudoUtilisateur : </h3>";
 if ($dao->existePseudoUtilisateur("admin")) $existe = "oui"; else $existe = "non";
 echo "<p>Existence de l'utilisateur 'admin' : <b>" . $existe . "</b><br>";
@@ -51,8 +51,8 @@ echo "Existence de l'utilisateur 'toto' : <b>" . $existe . "</b></p>";
 
 
 /*
-// test de la mÃ©thode getUnUtilisateur -----------------------------------------------------------
-// modifiÃ© par Jim le 12/8/2018
+// test de la méthode getUnUtilisateur -----------------------------------------------------------
+// modifié par Jim le 12/8/2018
 echo "<h3>Test de getUnUtilisateur : </h3>";
 $unUtilisateur = $dao->getUnUtilisateur("admin");
 if ($unUtilisateur) {
@@ -79,8 +79,8 @@ else {
 
 
 /*
-// test de la mÃ©thode getTousLesUtilisateurs ------------------------------------------------------
-// modifiÃ© par Jim le 12/8/2018
+// test de la méthode getTousLesUtilisateurs ------------------------------------------------------
+// modifié par Jim le 12/8/2018
 echo "<h3>Test de getTousLesUtilisateurs : </h3>";
 $lesUtilisateurs = $dao->getTousLesUtilisateurs();
 $nbReponses = sizeof($lesUtilisateurs);
@@ -94,13 +94,13 @@ foreach ($lesUtilisateurs as $unUtilisateur)
 
 
 /*
-// test de la mÃ©thode creerUnUtilisateur ----------------------------------------------------------
-// modifiÃ© par Jim le 12/8/2018
+// test de la méthode creerUnUtilisateur ----------------------------------------------------------
+// modifié par Jim le 12/8/2018
 echo "<h3>Test de creerUnUtilisateur : </h3>";
 $unUtilisateur = new Utilisateur(0, "toto", "mdputilisateur", "toto@gmail.com", "5566778899", 1, date('Y-m-d H:i:s', time()), 0, null);
 $ok = $dao->creerUnUtilisateur($unUtilisateur);
 if ($ok)
-{   echo "<p>Utilisateur bien enregistrÃ© !</p>";
+{   echo "<p>Utilisateur bien enregistré !</p>";
     echo $unUtilisateur->toString();
 }
 else {
@@ -110,8 +110,8 @@ else {
 
 
 /*
-// test de la mÃ©thode modifierMdpUtilisateur ------------------------------------------------------
-// modifiÃ© par Jim le 12/8/2018
+// test de la méthode modifierMdpUtilisateur ------------------------------------------------------
+// modifié par Jim le 12/8/2018
 echo "<h3>Test de modifierMdpUtilisateur : </h3>";
 $unUtilisateur = $dao->getUnUtilisateur("toto");
 if ($unUtilisateur) {
@@ -133,19 +133,19 @@ else {
 
 
 /*
-// test de la mÃ©thode supprimerUnUtilisateur ------------------------------------------------------
-// modifiÃ© par Jim le 12/8/2018
+// test de la méthode supprimerUnUtilisateur ------------------------------------------------------
+// modifié par Jim le 12/8/2018
 echo "<h3>Test de supprimerUnUtilisateur : </h3>";
 $ok = $dao->supprimerUnUtilisateur("toto");
 if ($ok) {
-    echo "<p>Utilisateur toto bien supprimÃ© !</p>";
+    echo "<p>Utilisateur toto bien supprimé !</p>";
 }
 else {
     echo "<p>Echec lors de la suppression de l'utilisateur toto !</p>";
 }
 $ok = $dao->supprimerUnUtilisateur("toto");
 if ($ok) {
-    echo "<p>Utilisateur toto bien supprimÃ© !</p>";
+    echo "<p>Utilisateur toto bien supprimé !</p>";
 }
 else {
     echo "<p>Echec lors de la suppression de l'utilisateur toto !</p>";
@@ -154,8 +154,8 @@ else {
 
 
 /*
-// test de la mÃ©thode envoyerMdp ------------------------------------------------------------------
-// modifiÃ© par Jim le 12/8/2018
+// test de la méthode envoyerMdp ------------------------------------------------------------------
+// modifié par Jim le 12/8/2018
 echo "<h3>Test de envoyerMdp : </h3>";
 // pour ce test, une adresse mail que vous pouvez consulter
 $unUtilisateur = new Utilisateur(0, "toto", "mdputilisateur", "jean.michel.cartron@gmail.com", "5566778899", 2, date('Y-m-d H:i:s', time()), 0, null);
@@ -163,15 +163,15 @@ $ok = $dao->creerUnUtilisateur($unUtilisateur);
 $dao->modifierMdpUtilisateur("toto", "mdpadmin");
 $ok = $dao->envoyerMdp("toto", "mdpadmin");
 if ($ok) {
-    echo "<p>Mail bien envoyÃ© !</p>";
+    echo "<p>Mail bien envoyé !</p>";
 }
 else {
     echo "<p>Echec lors de l'envoi du mail !</p>";
 }
-// supprimer le compte crÃ©Ã©
+// supprimer le compte créé
 $ok = $dao->supprimerUnUtilisateur("toto");
 if ($ok) {
-    echo "<p>Utilisateur toto bien supprimÃ© !</p>";
+    echo "<p>Utilisateur toto bien supprimé !</p>";
 }
 else {
     echo "<p>Echec lors de la suppression de l'utilisateur toto !</p>";
@@ -182,123 +182,23 @@ else {
 
 
 
-// Le code restant Ã  dÃ©velopper va Ãªtre rÃ©parti entre les membres de l'Ã©quipe de dÃ©veloppement.
-// Afin de limiter les conflits avec GitHub, il est dÃ©cidÃ© d'attribuer une zone de ce fichier Ã  chaque dÃ©veloppeur.
-// DÃ©veloppeur 1 : lignes 200 Ã  299
-// DÃ©veloppeur 2 : lignes 300 Ã  399
-// DÃ©veloppeur 3 : lignes 400 Ã  500
+// Le code restant à développer va être réparti entre les membres de l'équipe de développement.
+// Afin de limiter les conflits avec GitHub, il est décidé d'attribuer une zone de ce fichier à chaque développeur.
+// Développeur 1 : lignes 200 à 299
+// Développeur 2 : lignes 300 à 399
+// Développeur 3 : lignes 400 à 500
 
 // Quelques conseils pour le travail collaboratif :
-// avant d'attaquer un cycle de dÃ©veloppement (dÃ©but de sÃ©ance, nouvelle mÃ©thode, ...), faites un Pull pour rÃ©cupÃ©rer
-// la derniÃ¨re version du fichier.
-// AprÃ¨s avoir testÃ© et validÃ© une mÃ©thode, faites un commit et un push pour transmettre cette version aux autres dÃ©veloppeurs.
+// avant d'attaquer un cycle de développement (début de séance, nouvelle méthode, ...), faites un Pull pour récupérer
+// la dernière version du fichier.
+// Après avoir testé et validé une méthode, faites un commit et un push pour transmettre cette version aux autres développeurs.
 
 
 
 
 
 // --------------------------------------------------------------------------------------
-// dÃ©but de la zone attribuÃ©e au dÃ©veloppeur 1 (LELU AWEN) : lignes 200 Ã  299
-// --------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// --------------------------------------------------------------------------------------
-// dÃ©but de la zone attribuÃ©e au dÃ©veloppeur 2 (xxxxxxxxxxxxxxxxxxxx) : lignes 300 Ã  399
+// début de la zone attribuée au développeur 1 (xxxxxxxxxxxxxxxxxxxx) : lignes 200 à 299
 // --------------------------------------------------------------------------------------
 
 
@@ -398,7 +298,7 @@ else {
 
 
 // --------------------------------------------------------------------------------------
-// dÃ©but de la zone attribuÃ©e au dÃ©veloppeur 3 (Coubrun Mickaël) : lignes 400 Ã  499
+// début de la zone attribuée au développeur 2 (xxxxxxxxxxxxxxxxxxxx) : lignes 300 à 399
 // --------------------------------------------------------------------------------------
 
 
@@ -497,8 +397,110 @@ else {
 
 
 
+// --------------------------------------------------------------------------------------
+// début de la zone attribuée au développeur 3 (Coubrun Micka�l) : lignes 400 à 499
+// --------------------------------------------------------------------------------------
 
-// ferme la connexion Ã  MySQL :
+// test de la m�thode existeAdrMailUtilisateur ----------------------------------------------------
+// modifi� par Jim le 12/8/2018
+echo "<h3>Test de existeAdrMailUtilisateur : </h3>";
+if ($dao->existeAdrMailUtilisateur("admin@gmail.com")) $existe = "oui"; else $existe = "non";
+echo "<p>Existence de l'utilisateur 'admin@gmail.com' : <b>" . $existe . "</b><br>";
+if ($dao->existeAdrMailUtilisateur("delasalle.sio.eleves@gmail.com")) $existe = "oui"; else $existe = "non";
+echo "Existence de l'utilisateur 'delasalle.sio.eleves@gmail.com' : <b>" . $existe . "</b></br>";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ferme la connexion à MySQL :
 unset($dao);
 ?>
 
