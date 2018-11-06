@@ -285,9 +285,103 @@ foreach ($lesTraces as $uneTrace)
 }
 
 
+// test de la méthode getLesTracesAutorisees($idUtilisateur) --------------------------------------
+// modifié par Jim le 14/8/2018
+echo "<h3>Test de getLesTracesAutorisees(idUtilisateur) : </h3>";
+$lesTraces = $dao->getLesTracesAutorisees(2);
+$nbReponses = sizeof($lesTraces);
+echo "<p>Nombre de traces autorisées à l'utilisateur 2 : " . $nbReponses . "</p>";
+// affichage des traces
+foreach ($lesTraces as $uneTrace)
+{   echo ($uneTrace->toString());
+    echo ('<br>');
+}
+$lesTraces = $dao->getLesTracesAutorisees(3);
+$nbReponses = sizeof($lesTraces);
+echo "<p>Nombre de traces autorisées à l'utilisateur 3 : " . $nbReponses . "</p>";
+// affichage des traces
+foreach ($lesTraces as $uneTrace)
+{   echo ($uneTrace->toString());
+    echo ('<br>');
+}
 
 
+// test de la méthode creerUneTrace ----------------------------------------------------------
+// modifié par Jim le 14/8/2018
+echo "<h3>Test de creerUneTrace : </h3>";
+$trace1 = new Trace(0, "2017-12-18 14:00:00", "2017-12-18 14:10:00", true, 3);
+$ok = $dao->creerUneTrace($trace1);
+if ($ok) {
+    echo "<p>Trace bien enregistrée !</p>";
+    echo $trace1->toString();
+}
+else {
+    echo "<p>Echec lors de l'enregistrement de la trace !</p>";
+}
+$trace2 = new Trace(0, date('Y-m-d H:i:s', time()), null, false, 3);
+$ok = $dao->creerUneTrace($trace2);
+if ($ok) {
+    echo "<p>Trace bien enregistrée !</p>";
+    echo $trace2->toString();
+}
+else {
+    echo "<p>Echec lors de l'enregistrement de la trace !</p>";
+}
 
+// test de la méthode supprimerUneTrace -----------------------------------------------------------
+// modifié par Jim le 15/8/2018
+echo "<h3>Test de supprimerUneTrace : </h3>";
+$ok = $dao->supprimerUneTrace(22);
+if ($ok) {
+    echo "<p>Trace bien supprimée !</p>";
+}
+else {
+    echo "<p>Echec lors de la suppression de la trace !</p>";
+}
+
+
+// test des méthodes creerUnPointDeTrace et terminerUneTrace --------------------------------------
+// modifié par Jim le 15/8/2018
+echo "<h3>Test de terminerUneTrace : </h3>";
+// on choisit une trace non terminée
+$unIdTrace = 3;
+// on l'affiche
+$laTrace = $dao->getUneTrace($unIdTrace);
+echo "<h4>l'objet laTrace avant l'appel de la méthode terminerUneTrace : </h4>";
+echo ($laTrace->toString());
+echo ('<br>');
+// on la termine
+$dao->terminerUneTrace($unIdTrace);
+// et on l'affiche à nouveau
+$laTrace = $dao->getUneTrace($unIdTrace);
+echo "<h4>l'objet laTrace après l'appel de la méthode terminerUneTrace : </h4>";
+echo ($laTrace->toString());
+echo ('<br>');
+
+// test de la méthode getLesUtilisateursAutorises -------------------------------------------------
+// modifié par Jim le 13/8/2018
+echo "<h3>Test de getLesUtilisateursAutorises(idUtilisateur) : </h3>";
+$lesUtilisateurs = $dao->getLesUtilisateursAutorises(2);
+$nbReponses = sizeof($lesUtilisateurs);
+echo "<p>Nombre d'utilisateurs autorisés par l'utilisateur 2 : " . $nbReponses . "</p>";
+// affichage des utilisateurs
+foreach ($lesUtilisateurs as $unUtilisateur)
+{	echo ($unUtilisateur->toString());
+    echo ('<br>');
+}
+
+
+// test de la méthode getLesUtilisateursAutorisant ------------------------------------------------
+// modifié par Jim le 13/8/2018
+echo "<h3>Test de getLesUtilisateursAutorisant(idUtilisateur) : </h3>";
+$lesUtilisateurs = $dao->getLesUtilisateursAutorisant(4);
+$nbReponses = sizeof($lesUtilisateurs);
+echo "<p>Nombre d'utilisateurs autorisant l'utilisateur 4 à voir leurs parcours : " . $nbReponses . "</p>";
+// affichage des utilisateurs
+foreach ($lesUtilisateurs as $unUtilisateur)
+{   echo ($unUtilisateur->toString());
+    echo ('<br>');
+}
 
 
 
