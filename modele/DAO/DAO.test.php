@@ -198,10 +198,15 @@ else {
 
 
 // --------------------------------------------------------------------------------------
-// début de la zone attribuée au développeur 1 (xxxxxxxxxxxxxxxxxxxx) : lignes 200 à 299
+// début de la zone attribuée au développeur 1 (LELU AWEN) : lignes 200 à 299
 // --------------------------------------------------------------------------------------
 
 
+$points = $dao->getLesPointsDeTrace(2);
+foreach ($points as $point)
+{
+    echo $point;
+}
 
 
 
@@ -398,28 +403,28 @@ else {
 
 
 // --------------------------------------------------------------------------------------
-// début de la zone attribuée au développeur 3 (Coubrun Micka�l) : lignes 400 à 499
+// début de la zone attribuée au développeur 3 (Coubrun Mickaél) : lignes 400 à 499
 // --------------------------------------------------------------------------------------
 
-// test de la m�thode existeAdrMailUtilisateur ----------------------------------------------------
-// modifi� par MC le 16/10/2018
+// test de la méthode existeAdrMailUtilisateur ----------------------------------------------------
+// modifié par MC le 16/10/2018
 echo "<h3>Test de existeAdrMailUtilisateur : </h3>";
 if ($dao->existeAdrMailUtilisateur("admin@gmail.com")) $existe = "oui"; else $existe = "non";
 echo "<p>Existence de l'utilisateur 'admin@gmail.com' : <b>" . $existe . "</b><br>";
 if ($dao->existeAdrMailUtilisateur("delasalle.sio.eleves@gmail.com")) $existe = "oui"; else $existe = "non";
 echo "Existence de l'utilisateur 'delasalle.sio.eleves@gmail.com' : <b>" . $existe . "</b></br>";
 
-// test de la m�thode creerUneAutorisation ---------------------------------------------------------
-// modifi� par MC le 16/10/2018
+// test de la méthode creerUneAutorisation ---------------------------------------------------------
+// modifié par MC le 16/10/2018
 echo "<h3>Test de creerUneAutorisation : </h3>";
 if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
-echo "<p>La cr�ation de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a r�ussi : <b>" . $ok . "</b><br>";
-// la m�me autorisation ne peut pas �tre enregistr�e 2 fois
+echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
+// la méme autorisation ne peut pas étre enregistrée 2 fois
 if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
-echo "<p>La cr�ation de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a r�ussi : <b>" . $ok . "</b><br>";
+echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
 
-// test de la m�thode autoriseAConsulter ----------------------------------------------------------
-// modifi� par MC le 16/10/2018
+// test de la méthode autoriseAConsulter ----------------------------------------------------------
+// modifié par MC le 16/10/2018
 echo "<h3>Test de autoriseAConsulter : </h3>";
 if ($dao->autoriseAConsulter(2, 3)) $autorise = "oui"; else $autorise = "non";
 echo "<p>L'utilisateur 2 autorise l'utilisateur 3 : <b>" . $autorise . "</b><br>";
@@ -427,15 +432,15 @@ echo "<p>L'utilisateur 2 autorise l'utilisateur 3 : <b>" . $autorise . "</b><br>
 if ($dao->autoriseAConsulter(3, 2)) $autorise = "oui"; else $autorise = "non";
 echo "<p>L'utilisateur 3 autorise l'utilisateur 2 : <b>" . $autorise . "</b><br>";
 
-// test de la m�thode supprimerUneAutorisation ----------------------------------------------------
-// modifi� par MC le 16/10/2018
+// test de la méthode supprimerUneAutorisation ----------------------------------------------------
+// modifié par MC le 16/10/2018
 echo "<h3>Test de supprimerUneAutorisation : </h3>";
-// on cr�e une autorisation
+// on crée une autorisation
 if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
-echo "<p>La cr�ation de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a r�ussi : <b>" . $ok . "</b><br>";
+echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
 // puis on la supprime
 if ($dao->supprimerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
-echo "<p>La suppression de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a r�ussi : <b>" . $ok . "</b><br>";
+echo "<p>La suppression de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
 
 
 

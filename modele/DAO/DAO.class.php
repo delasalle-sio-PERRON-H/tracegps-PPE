@@ -232,8 +232,8 @@ class DAO
         if ($this->existePseudoUtilisateur($unUtilisateur->getPseudo())) return false;
 
         // préparation de la requête
-        $txt_req1 = "insert into tracegps_utilisateurs (pseudo, mdpSha1, adrMail, numTel, niveau, dateCreation)";
-        $txt_req1 .= " values (:pseudo, :mdpSha1, :adrMail, :numTel, :niveau, :dateCreation)";
+        $txt_req1 = "insert into tracegps_utilisateurs (pseudo, mdpSha1, adrMail, numTel, niveau, dateCreation)
+                      values (:pseudo, :mdpSha1, :adrMail, :numTel, :niveau, :dateCreation)";
         $req1 = $this->cnx->prepare($txt_req1);
         // liaison de la requête et de ses paramètres
         $req1->bindValue("pseudo", utf8_decode($unUtilisateur->getPseudo()), PDO::PARAM_STR);
@@ -397,10 +397,8 @@ class DAO
                     0,
                     0
                 );
-            }
-            else
-            {
-                $lastPointDeTrace = $pointsDeTrace[sizeof($pointsDeTrace)-1];
+            } else {
+                $lastPointDeTrace = $pointsDeTrace[sizeof($pointsDeTrace) - 1];
                 $unPointDeTrace = new PointDeTrace(
                     $unIdTrace,
                     $unId,
@@ -416,7 +414,7 @@ class DAO
 
                 $unPointDeTrace->setDistanceCumulee(Point::getDistance($unPointDeTrace, $lastPointDeTrace));
                 /** @var PointDeTrace $lastPointDeTrace */
-                $unPointDeTrace->setTempsCumule($lastPointDeTrace->getTempsCumule()+($lastPointDeTrace->getDateHeure()-$unPointDeTrace->getDateHeure()));
+                $unPointDeTrace->setTempsCumule($lastPointDeTrace->getTempsCumule() + ($lastPointDeTrace->getDateHeure() - $unPointDeTrace->getDateHeure()));
             }
 
             // ajout de l'utilisateur à la collection
@@ -658,18 +656,16 @@ class DAO
             return true;
     } // fin méthode existeAdrMailUtilisateur
 
-    
+
     // enregistre l'autorisation dans la BDD, true si enregistrer, false sinon
-    public  function creerUneAutorisation($idAutorisant, $idAutorise)
+    public function creerUneAutorisation($idAutorisant, $idAutorise)
     {
         // test si l'autorisation existe déjà
-        if ($this->autoriseAConsulter($idAutorisant, $idAutorise) == true)
-        {
-            return  false;
+        if ($this->autoriseAConsulter($idAutorisant, $idAutorise) == true) {
+            return false;
         }
         // préparation de la requête
-        $txt_req = "insert into tracegps_autorisation (idAutorisant, idAutorise)";
-        $txt_req .= "values (:idAutorisant, :idAutorise)";
+        $txt_req = "insert into tracegps_autorisations (idAutorisant, idAutorise) values (:idAutorisant, :idAutorise)";
         $req = $this->cnx->prepare($txt_req);
         // liaison de la requête et ses paramètres
         $req->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_INT);
@@ -678,34 +674,35 @@ class DAO
         $ok = $req->execute();
         return $ok;
     } // fin méthode creerUneAutorisation
-    
+
     // vérifie que l'autorisateur autorise l'autorisé à consulter ses traces, renvoie true si l'autorisation est donnée, false sinon
     public function autoriseAConsulter($idAutorisant, $idAutorise)
-    {	
+    {
         // préparation de la requête de recherche
         $txt_req = "Select count(*) from tracegps_autorisations where idAutorisant = :idAutorisant and idAutorise = :idAutorise";
         $req = $this->cnx->prepare($txt_req);
         // liaison de la requête et de ses paramètres
         $req->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_INT);
         $req->bindValue("idAutorise", $idAutorise, PDO::PARAM_INT);
-        
+
         // extraction des données et comptage des réponses
         $req->execute();
         $nbReponses = $req->fetchColumn(0);
         // libère les ressources du jeu de données
         $req->closeCursor();
-        
+
         // fourniture de la réponse
         if ($nbReponses == 0)
-                return false;
-            else
-                return true;
+            return false;
+        else
+            return true;
     } // fin méthode autoriseAConsulter
+
     // supprime l'autorisation ($idAutorisant, $idAutorise) dans la bdd, fournit true si l'effacement s'est bien effectué, false sinon
     public function supprimerUneAutorisation($idAutorisant, $idAutorise)
-    {	
+    {
         // préparation de la requête
-        $txt_req = "delete from tracegps_autorisations" ;
+        $txt_req = "delete from tracegps_autorisations";
         $txt_req .= " where idAutorisant = :idAutorisant and idAutorise = :idAutorise";
         $req = $this->cnx->prepare($txt_req);
         // liaison de la requête et de ses paramètres
