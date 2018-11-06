@@ -357,11 +357,16 @@ class DAO
     // --------------------------------------------------------------------------------------
 
 
+    /**
+     * @param $idTrace
+     * @return array
+     */
     public function getLesPointsDeTrace($idTrace)
     {
+        /** @var PointDeTrace $lastPointDeTrace */
         $pointsDeTrace = [];
 
-        $txt_req = /** @lang SQL */
+        $txt_req =
             "
             select idTrace, id, latitude, longitude, altitude, dateHeure, rythmeCardio
             from tracegps_points
@@ -412,9 +417,16 @@ class DAO
                     0
                 );
 
-                $unPointDeTrace->setDistanceCumulee(Point::getDistance($unPointDeTrace, $lastPointDeTrace));
-                /** @var PointDeTrace $lastPointDeTrace */
-                $unPointDeTrace->setTempsCumule($lastPointDeTrace->getTempsCumule() + ($lastPointDeTrace->getDateHeure() - $unPointDeTrace->getDateHeure()));
+                $distance = Point::getDistance($lastPointDeTrace, $unPointDeTrace);
+                $unPointDeTrace->setDistanceCumulee($lastPointDeTrace->getDistanceCumulee() + $distance);
+                $timeLastPoint = DateTime::createFromFormat("Y-m-d H:i:s", $lastPointDeTrace->getDateHeure());
+                $timePoint = DateTime::createFromFormat("Y-m-d H:i:s", $unPointDeTrace->getDateHeure());
+                $tempsCumulee = $lastPointDeTrace->getTempsCumule() + $timePoint->diff($timeLastPoint)->s;
+                $unPointDeTrace->setTempsCumule($tempsCumulee);
+
+                $vitesse = $distance / ($timePoint->diff($timeLastPoint)->s / 3600);
+
+                $unPointDeTrace->setVitesse($vitesse);
             }
 
             // ajout de l'utilisateur à la collection
@@ -428,6 +440,120 @@ class DAO
         return $pointsDeTrace;
     }
 
+    /**
+     * @param $unPointDeTrace
+     */
+    public function creerUnPointDeTrace($unPointDeTrace)
+    {
+        /** @var PointDeTrace $unPointDeTrace */
+
+        $idTrace = $unPointDeTrace->getIdTrace();
+        $id = $unPointDeTrace->getId();
+        $latitude = $unPointDeTrace->getLatitude();
+        $longitude = $unPointDeTrace->getLongitude();
+        $altitude = $unPointDeTrace->getAltitude();
+        $dateHeure = $unPointDeTrace->getDateHeure();
+        $rythmeCardio = $unPointDeTrace->getRythmeCardio();
+
+        $txt_req =
+            "
+            insert into tracegps_points (idTrace, id, latitude, longitude, altitude, dateHeure, rythmeCardio) 
+            values ($idTrace, $id, $latitude, $longitude, $altitude, '$dateHeure', $rythmeCardio)
+            ";
+
+        $req = $this->cnx->prepare($txt_req);
+        // extraction des données
+        $req->execute();
+
+    }
+
+    /**
+     * @param $id
+     * @return null|Trace
+     */
+    public function getUneTrace($id)
+    {
+        $txt_req =
+            "
+            select *
+            from tracegps_traces
+            where id = $id
+            ";
+
+        $req = $this->cnx->prepare($txt_req);
+        $req->execute();
+
+        $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+
+        if ($uneLigne) {
+            // si une ligne est trouvée :
+            $dateDebut = $uneLigne->dateDebut;
+            $dateFin = $uneLigne->dateFin;
+            $terminee = $uneLigne->terminee;
+            $idUtilisateur = $uneLigne->idUtilisateur;
+
+            $uneTrace = new Trace($id, $dateDebut, $dateFin, $terminee, $idUtilisateur);
+
+            $uneTrace->setLesPointsDeTrace($this->getLesPointsDeTrace($id));
+
+            return $uneTrace;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getToutesLesTraces()
+    {
+        $lesTraces = [];
+
+        $txt_req =
+            "
+            select id
+            from tracegps_traces
+            ";
+
+        $req = $this->cnx->prepare($txt_req);
+        $req->execute();
+
+        $uneLigne = $req->fetch(5);
+
+        while($uneLigne)
+        {
+            $lesTraces[] = $this->getUneTrace($uneLigne->id);
+            $uneLigne = $req->fetch(5);
+        }
+
+        return $lesTraces;
+    }
+
+    public function getLesTraces($idUtilisateur)
+    {
+        $lesTraces = [];
+
+        $txt_req =
+            "
+            select id
+            from tracegps_traces
+            where idUtilisateur = :idUser
+            ";
+
+        $req = $this->cnx->prepare($txt_req);
+        $req->bindValue(':idUser', $idUtilisateur, PDO::PARAM_INT);
+        $req->execute();
+
+        $uneLigne = $req->fetch(5);
+
+        while($uneLigne)
+        {
+            $lesTraces[] = $this->getUneTrace($uneLigne->id);
+            $uneLigne = $req->fetch(5);
+        }
+
+        return $lesTraces;
+    }
 
 
 

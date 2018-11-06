@@ -19,7 +19,7 @@ include_once ('DAO.class.php');
 //include_once ('_DAO.mysql.class.php');
 $dao = new DAO();
 
-/*
+
 // test de la méthode getNiveauConnexion ----------------------------------------------------------
 // modifié par Jim le 12/8/2018
 echo "<h3>Test de getNiveauConnexion : </h3>";
@@ -34,10 +34,10 @@ echo "<p>Niveau de ('europa', '123456') : " . $niveau . "</br>";
 
 $niveau = $dao->getNiveauConnexion("toto", sha1("mdputilisateur"));
 echo "<p>Niveau de ('toto', 'mdputilisateur') : " . $niveau . "</br>";
-*/
 
 
-/*
+
+
 // test de la méthode existePseudoUtilisateur -----------------------------------------------------
 // modifié par Jim le 12/8/2018
 echo "<h3>Test de existePseudoUtilisateur : </h3>";
@@ -47,10 +47,10 @@ if ($dao->existePseudoUtilisateur("europa")) $existe = "oui"; else $existe = "no
 echo "Existence de l'utilisateur 'europa' : <b>" . $existe . "</b></br>";
 if ($dao->existePseudoUtilisateur("toto")) $existe = "oui"; else $existe = "non";
 echo "Existence de l'utilisateur 'toto' : <b>" . $existe . "</b></p>";
-*/
 
 
-/*
+
+
 // test de la méthode getUnUtilisateur -----------------------------------------------------------
 // modifié par Jim le 12/8/2018
 echo "<h3>Test de getUnUtilisateur : </h3>";
@@ -75,10 +75,10 @@ if ($unUtilisateur) {
 else {
     echo "<p>L'utilisateur admon n'existe pas !</p>";
 }
-*/  
 
 
-/*
+
+
 // test de la méthode getTousLesUtilisateurs ------------------------------------------------------
 // modifié par Jim le 12/8/2018
 echo "<h3>Test de getTousLesUtilisateurs : </h3>";
@@ -90,10 +90,10 @@ foreach ($lesUtilisateurs as $unUtilisateur)
 {	echo ($unUtilisateur->toString());
     echo ('<br>');
 }
-*/
 
 
-/*
+
+
 // test de la méthode creerUnUtilisateur ----------------------------------------------------------
 // modifié par Jim le 12/8/2018
 echo "<h3>Test de creerUnUtilisateur : </h3>";
@@ -106,10 +106,10 @@ if ($ok)
 else {
     echo "<p>Echec lors de l'enregistrement de l'utilisateur !</p>";
 }
-*/
 
 
-/*
+
+
 // test de la méthode modifierMdpUtilisateur ------------------------------------------------------
 // modifié par Jim le 12/8/2018
 echo "<h3>Test de modifierMdpUtilisateur : </h3>";
@@ -129,7 +129,7 @@ if ($unUtilisateur) {
 else {
     echo "<p>L'utilisateur toto n'existe pas !</p>";
 }
-*/
+
 
 
 /*
@@ -150,10 +150,10 @@ if ($ok) {
 else {
     echo "<p>Echec lors de la suppression de l'utilisateur toto !</p>";
 }
-*/
 
 
-/*
+
+
 // test de la méthode envoyerMdp ------------------------------------------------------------------
 // modifié par Jim le 12/8/2018
 echo "<h3>Test de envoyerMdp : </h3>";
@@ -175,8 +175,8 @@ if ($ok) {
 }
 else {
     echo "<p>Echec lors de la suppression de l'utilisateur toto !</p>";
-}
-*/
+}*/
+
 
 
 
@@ -202,10 +202,86 @@ else {
 // --------------------------------------------------------------------------------------
 
 
+// test de la méthode getLesPointsDeTrace ------------------------------------------------------------------
+echo "<h3>Test de getLesPointsDeTrace : </h3>";
 $points = $dao->getLesPointsDeTrace(2);
 foreach ($points as $point)
 {
-    echo $point;
+    if (!empty($point)) {
+        echo $point->toString();
+        echo "<br/>";
+    }
+}
+
+// test de la méthode creerUnPointDeTrace ---------------------------------------------------------
+// modifié par Jim le 13/8/2018
+echo "<h3>Test de creerUnPointDeTrace : </h3>";
+// on affiche d'abord le nombre de points (5) de la trace 1
+$lesPoints = $dao->getLesPointsDeTrace(1);
+$nbPoints = sizeof($lesPoints);
+echo "<p>Nombre de points de la trace 1 : " . $nbPoints . "</p>";
+// on crée un sixième point et on l'ajoute à la trace 1
+$unIdTrace = 1;
+$unID = 6;
+$uneLatitude = 48.20;
+$uneLongitude = -1.55;
+$uneAltitude = 50;
+$uneDateHeure = date('Y-m-d H:i:s', time());
+$unRythmeCardio = 80;
+$unTempsCumule = 0;
+$uneDistanceCumulee = 0;
+$uneVitesse = 15;
+$unPoint = new PointDeTrace($unIdTrace, $unID, $uneLatitude, $uneLongitude, $uneAltitude, $uneDateHeure, $unRythmeCardio, $unTempsCumule, $uneDistanceCumulee, $uneVitesse);
+$dao->creerUnPointDeTrace($unPoint);
+// on affiche à nouveau le nombre de points (6) de la trace 1
+$lesPoints = $dao->getLesPointsDeTrace(1);
+$nbPoints = sizeof($lesPoints);
+echo "<p>Nombre de points de la trace 1 : " . $nbPoints . "</p>";
+echo ('<br>');
+
+
+// test de la méthode getUneTrace -----------------------------------------------------------------
+// modifié par Jim le 14/8/2018
+echo "<h3>Test de getUneTrace : </h3>";
+$uneTrace = $dao->getUneTrace(2);
+if ($uneTrace) {
+    echo "<p>La trace 2 existe : <br>" . $uneTrace->toString() . "</p>";
+}
+else {
+    echo "<p>La trace 2 n'existe pas !</p>";
+}
+$uneTrace = $dao->getUneTrace(100);
+if ($uneTrace) {
+    echo "<p>La trace 100 existe : <br>" . $uneTrace->toString() . "</p>";
+}
+else {
+    echo "<p>La trace 100 n'existe pas !</p>";
+}
+
+
+// test de la méthode getToutesLesTraces ----------------------------------------------------------
+// modifié par Jim le 14/8/2018
+echo "<h3>Test de getToutesLesTraces : </h3>";
+$lesTraces = $dao->getToutesLesTraces();
+$nbReponses = sizeof($lesTraces);
+echo "<p>Nombre de traces : " . $nbReponses . "</p>";
+// affichage des traces
+foreach ($lesTraces as $uneTrace)
+{   echo ($uneTrace->toString());
+    echo ('<br>');
+}
+
+
+// test de la méthode getLesTraces($idUtilisateur) ------------------------------------------------
+// modifié par Jim le 14/8/2018
+echo "<h3>Test de getLesTraces(idUtilisateur) : </h3>";
+$lesTraces = $dao->getLesTraces(2);
+$nbReponses = sizeof($lesTraces);
+echo "<p>Nombre de traces de l'utilisateur 2 : " . $nbReponses . "</p>";
+// affichage des traces
+foreach ($lesTraces as $uneTrace)
+{   echo ($uneTrace->toString());
+    echo ('<br>');
 }
 
 
