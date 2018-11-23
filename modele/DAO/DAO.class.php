@@ -37,11 +37,11 @@
 
 
 // certaines méthodes nécessitent les classes suivantes :
-include_once('../Utilisateur.class.php');
-include_once('../Trace.class.php');
-include_once('../PointDeTrace.class.php');
-include_once('../Point.class.php');
-include_once('../Outils.class.php');
+include_once(__DIR__.'/../Utilisateur.class.php');
+include_once(__DIR__.'/../Trace.class.php');
+include_once(__DIR__.'/../PointDeTrace.class.php');
+include_once(__DIR__.'/../Point.class.php');
+include_once(__DIR__.'/../Outils.class.php');
 
 // inclusion des paramètres de l'application
 include_once('parametres.php');
