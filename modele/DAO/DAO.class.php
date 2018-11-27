@@ -37,11 +37,11 @@
 
 
 // certaines méthodes nécessitent les classes suivantes :
-include_once(__DIR__.'/../Utilisateur.class.php');
-include_once(__DIR__.'/../Trace.class.php');
-include_once(__DIR__.'/../PointDeTrace.class.php');
-include_once(__DIR__.'/../Point.class.php');
-include_once(__DIR__.'/../Outils.class.php');
+include_once(__DIR__ . '/../Utilisateur.class.php');
+include_once(__DIR__ . '/../Trace.class.php');
+include_once(__DIR__ . '/../PointDeTrace.class.php');
+include_once(__DIR__ . '/../Point.class.php');
+include_once(__DIR__ . '/../Outils.class.php');
 
 // inclusion des paramètres de l'application
 include_once('parametres.php');
@@ -593,6 +593,10 @@ class DAO
         return $lesTraces;
     }
 
+    /**
+     * @param $uneTrace
+     * @return bool
+     */
     public function creerUneTrace($uneTrace)
     {
         /** @var Trace $uneTrace */
@@ -686,8 +690,7 @@ class DAO
         $req->execute();
         $uneLigne = $req->fetch(PDO::FETCH_OBJ);
 
-        while ($uneLigne)
-        {
+        while ($uneLigne) {
 
             $users[] = $this->getUserById($uneLigne->idAutorise);
 
@@ -717,8 +720,7 @@ class DAO
         $req->execute();
         $uneLigne = $req->fetch(PDO::FETCH_OBJ);
 
-        while ($uneLigne)
-        {
+        while ($uneLigne) {
 
             $users[] = $this->getUserById($uneLigne->idAutorisant);
 
@@ -767,208 +769,6 @@ class DAO
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // --------------------------------------------------------------------------------------
-    // début de la zone attribuée au développeur 2 (xxxxxxxxxxxxxxxxxxxx) : lignes 550 à 749
-    // --------------------------------------------------------------------------------------
-
-
-    // --------------------------------------------------------------------------------------
-    // début de la zone attribuée au développeur 3 (xxxxxxxxxxxxxxxxxxxx) : lignes 750 à 949
-    // --------------------------------------------------------------------------------------
-
-
-    // --------------------------------------------------------------------------------------
-    // début de la zone attribuée au développeur 4 (Coubrun Mickaël) : lignes 950 à 1150
-    // --------------------------------------------------------------------------------------
 
     // fournit true si l'adresse mail $adrMail existe dans la table sinon false
     public function existeAdrMailUtilisateur($adrmail)
