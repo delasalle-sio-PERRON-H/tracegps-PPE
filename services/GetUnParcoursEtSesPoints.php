@@ -1,39 +1,39 @@
 <?php
 // Projet TraceGPS - services web
 // fichier : services/GetTousLesUtilisateurs.php
-// Dernière mise à  jour : 27/11/2018 par Coubrun
+// DerniÃ¨re mise Ã Â  jour : 27/11/2018 par Coubrun
 
-//Rôle : ce service web permet à un utilisateur d'obtenir le détail d'un de ses parcours ou d'un parcours d'un membre qui l'autorise.
+//RÃ´le : ce service web permet Ã  un utilisateur d'obtenir le dÃ©tail d'un de ses parcours ou d'un parcours d'un membre qui l'autorise.
     
-//Paramètres à fournir :
+//ParamÃ¨tres Ã  fournir :
 //	pseudo : le pseudo de l'utilisateur
-//	mdpSha1 : le mot de passe de l'utilisateur hashé en sha1
-//	idTrace : l'id de la trace à consulter
-//	lang : le langage utilisé pour le flux de données ("xml" ou "json")
+//	mdpSha1 : le mot de passe de l'utilisateur hashÃ© en sha1
+//	idTrace : l'id de la trace Ã  consulter
+//	lang : le langage utilisÃ© pour le flux de donnÃ©es ("xml" ou "json")
 
-// Le service retourne un flux de données XML contenant un compte-rendu d'exécution ainsi que la synthèse et la liste des points du parcours
-// Les paramètres peuvent être passés par la méthode GET (pratique pour les tests, mais à éviter en exploitation) :
-//     http://<hébergeur>/GetUnParcoursEtSesPoints.php?pseudo=europa&mdpSha1=13e3668bbee30b004380052b086457b014504b3e&idTrace=2
-// Les paramètres peuvent être passés par la méthode POST (à privilégier en exploitation pour la confidentialité des données) :
-//     http://<hébergeur>/GetUnParcoursEtSesPoints.php
+// Le service retourne un flux de donnÃ©es XML contenant un compte-rendu d'exÃ©cution ainsi que la synthÃ¨se et la liste des points du parcours
+// Les paramÃ¨tres peuvent Ãªtre passÃ©s par la mÃ©thode GET (pratique pour les tests, mais Ã  Ã©viter en exploitation) :
+//     http://<hÃ©bergeur>/GetUnParcoursEtSesPoints.php?pseudo=europa&mdpSha1=13e3668bbee30b004380052b086457b014504b3e&idTrace=2
+// Les paramÃ¨tres peuvent Ãªtre passÃ©s par la mÃ©thode POST (Ã  privilÃ©gier en exploitation pour la confidentialitÃ© des donnÃ©es) :
+//     http://<hÃ©bergeur>/GetUnParcoursEtSesPoints.php
 
-// connexion du serveur web à la base MySQL
+// connexion du serveur web Ã  la base MySQL
 include_once ('../modele/DAO/DAO.class.php');
 $dao = new DAO();
 
-// Récupération des données transmises
-// la fonction $_GET récupère une donnée passée en paramètre dans l'URL par la méthode GET
-// la fonction $_POST récupère une donnée envoyées par la méthode POST
-// la fonction $_REQUEST récupère par défaut le contenu des variables $_GET, $_POST, $_COOKIE
+// RÃ©cupÃ©ration des donnÃ©es transmises
+// la fonction $_GET rÃ©cupÃ¨re une donnÃ©e passÃ©e en paramÃ¨tre dans l'URL par la mÃ©thode GET
+// la fonction $_POST rÃ©cupÃ¨re une donnÃ©e envoyÃ©es par la mÃ©thode POST
+// la fonction $_REQUEST rÃ©cupÃ¨re par dÃ©faut le contenu des variables $_GET, $_POST, $_COOKIE
 if ( empty ($_REQUEST ["pseudo"]) == true)  $pseudo = "";  else   $pseudo = $_REQUEST ["pseudo"];
 if ( empty ($_REQUEST ["mdpSha1"]) == true)  $mdpSha1 = "";  else   $mdpSha1 = $_REQUEST ["mdpSha1"];
 if ( empty ($_REQUEST ["idTrace"]) == true)  $idTrace = "";  else   $idTrace = $_REQUEST ["idTrace"];
 // initialisation
 $laTrace = null;
-// Contrôle de la présence des paramètres
+// ContrÃ´le de la prÃ©sence des paramÃ¨tres
 if ( $pseudo == "" || $mdpSha1 == "" || $idTrace == "" )
 {	
-    $msg = "Erreur : données incomplètes !";
+    $msg = "Erreur : donnÃ©es incomplÃ¨tes !";
 }
 else
 {	
@@ -42,7 +42,7 @@ else
     $msg = "Erreur : authentification incorrecte !";
 }
 else
-{	// contrôle d'existence de idTrace
+{	// contrÃ´le d'existence de idTrace
     $laTrace = $dao->getUneTrace($idTrace);
     if ($laTrace == null)
     {  
@@ -50,64 +50,64 @@ else
     }
     else
     {   
-        // récupération de l'id de l'utilisateur demandeur et du propriétaire du parcours
+        // rÃ©cupÃ©ration de l'id de l'utilisateur demandeur et du propriÃ©taire du parcours
         $idDemandeur = $dao->getUnUtilisateur($pseudo)->getId();
         $idProprietaire = $laTrace->getIdUtilisateur();
         
-        // vérification de l'autorisation
+        // vÃ©rification de l'autorisation
         if ( $idDemandeur != $idProprietaire && $dao->autoriseAConsulter($idProprietaire, $idDemandeur) == false )
         {   
-            $msg = "Erreur : vous n'êtes pas autorisé par le propriétaire du parcours !";
+            $msg = "Erreur : vous n'Ãªtes pas autorisÃ© par le propriÃ©taire du parcours !";
         }
         else
         {   
-            $msg = "Données de la trace demandée.";
+            $msg = "DonnÃ©es de la trace demandÃ©e.";
         }
     }
 }
 }
-// ferme la connexion à MySQL
+// ferme la connexion Ã  MySQL
 unset($dao);
 
-// création du flux XML en sortie
+// crÃ©ation du flux XML en sortie
 creerFluxXML ($msg, $laTrace);
 // fin du programme (pour ne pas enchainer sur la fonction qui suit)
 exit;
 
-// création du flux XML en sortie
+// crÃ©ation du flux XML en sortie
 function creerFluxXML($msg, $laTrace)
 {
-    // crée une instance de DOMdocument (DOM : Document Object Model)
+    // crÃ©e une instance de DOMdocument (DOM : Document Object Model)
     $doc = new DOMDocument();
     
     //specifie la version et le type d'encodage
     $doc->version = '1.0';
     $doc->encoding = "UTF-8";
     
-    // crée un commentaire et l'encode en UTF-8
-    $elt_commentaire = $doc->createComment('Service web GetUnParcoursEtSesPoints - BTS SIO - Lycée De La Salle - Rennes');
-    // place ce commentaire à la racine du document XML
+    // crÃ©e un commentaire et l'encode en UTF-8
+    $elt_commentaire = $doc->createComment('Service web GetUnParcoursEtSesPoints - BTS SIO - LycÃ©e De La Salle - Rennes');
+    // place ce commentaire Ã  la racine du document XML
     $doc->appendChild($elt_commentaire);
     
-    // crée l'élément 'data' à la racine du document XML
+    // crÃ©e l'Ã©lÃ©ment 'data' Ã  la racine du document XML
     $elt_data = $doc->createElement('data');
     $doc->appendChild($elt_data);
     
-    // place l'élément 'reponse' dans l'élément 'data'
+    // place l'Ã©lÃ©ment 'reponse' dans l'Ã©lÃ©ment 'data'
     $elt_reponse = $doc->createElement('reponse', $msg);
     $elt_data->appendChild($elt_reponse);
     
-    // place l'élément 'donnees' dans l'élément 'data'
+    // place l'Ã©lÃ©ment 'donnees' dans l'Ã©lÃ©ment 'data'
     $elt_donnees = $doc->createElement('donnees');
     $elt_data->appendChild($elt_donnees);
     
     if ($laTrace != null)
     {
-        // place l'élément 'trace' dans l'élément 'donnees'
+        // place l'Ã©lÃ©ment 'trace' dans l'Ã©lÃ©ment 'donnees'
         $elt_trace = $doc->createElement('trace');
         $elt_donnees->appendChild($elt_trace);
         
-        // place la description de la trace dans l'élément 'trace'
+        // place la description de la trace dans l'Ã©lÃ©ment 'trace'
         $elt_id = $doc->createElement('id', $laTrace->getId());
         $elt_trace->appendChild($elt_id);
         
@@ -126,7 +126,7 @@ function creerFluxXML($msg, $laTrace)
         $elt_idUtilisateur = $doc->createElement('idUtilisateur', $laTrace->getIdUtilisateur());
         $elt_trace->appendChild($elt_idUtilisateur);
         
-        // place l'élément 'lespoints' dans l'élément 'donnees'
+        // place l'Ã©lÃ©ment 'lespoints' dans l'Ã©lÃ©ment 'donnees'
         $elt_lespoints = $doc->createElement('lespoints');
         $elt_donnees->appendChild($elt_lespoints);
         
@@ -135,12 +135,12 @@ function creerFluxXML($msg, $laTrace)
         {
             foreach ($laTrace->getLesPointsDeTrace() as $unPointDeTrace)
             {
-                // crée un élément vide 'point'
+                // crÃ©e un Ã©lÃ©ment vide 'point'
                 $elt_point = $doc->createElement('point');
-                // place l'élément 'point' dans l'élément 'lespoints'
+                // place l'Ã©lÃ©ment 'point' dans l'Ã©lÃ©ment 'lespoints'
                 $elt_lespoints->appendChild($elt_point);
                 
-                // crée les éléments enfants de l'élément 'point'
+                // crÃ©e les Ã©lÃ©ments enfants de l'Ã©lÃ©ment 'point'
                 $elt_id             = $doc->createElement('id', $unPointDeTrace->getId());
                 $elt_point->appendChild($elt_id);
                 
