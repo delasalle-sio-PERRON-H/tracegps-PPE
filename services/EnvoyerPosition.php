@@ -3,7 +3,7 @@
 // fichier : services/GetTousLesUtilisateurs.php
 // Dernière mise à  jour : 27/11/2018 par Coubrun
 
-//Rôle : ce service web permet à un utilisateur d'obtenir le détail d'un de ses parcours ou d'un parcours d'un membre qui l'autorise.
+//Rôle : ce service web permet à un utilisateur d'envoyer sa position
 
 //Paramètres à fournir :
 //	pseudo : le pseudo de l'utilisateur
@@ -19,10 +19,10 @@
 // Le service retourne un flux de données XML contenant un compte-rendu d'exécution ainsi que la synthèse et la liste des points du parcours
 
 // Les paramètres peuvent être passés par la méthode GET (pratique pour les tests, mais à éviter en exploitation) :
-//     http://<hébergeur>/GetUnParcoursEtSesPoints.php?pseudo=europa&mdpSha1=13e3668bbee30b004380052b086457b014504b3e&idTrace=2
+//     http://<hébergeur>/EnvoyerPosition.php?pseudo=europa&mdpSha1=13e3668bbee30b004380052b086457b014504b3e&idTrace=26&dateHeure=2018-01-01 13:42:21&latitude=48.15&longitude=-1.68&altitude=50&rythmeCardio=80
 
 // Les paramètres peuvent être passés par la méthode POST (à privilégier en exploitation pour la confidentialité des données) :
-//     http://<hébergeur>/GetUnParcoursEtSesPoints.php
+//     http://<hébergeur>/EnvoyerPosition.php
 
 // connexion du serveur web à la base MySQL
 include_once ('../modele/DAO/DAO.class.php');
@@ -42,7 +42,7 @@ if ( empty ($_REQUEST ["altitude"]) == true)  $altitude = "";  else   $altitude 
 if ( empty ($_REQUEST ["rythmeCardio"]) == true)  $rythmeCardio = "0";  else   $rythmeCardio = $_REQUEST ["rythmeCardio"];
 
 // initialisation
-$laTrace = null;
+$unPoint = null;
 
 // Contrôle de la présence des paramètres
 if ( $pseudo == "" || $mdpSha1 == "" || $idTrace == "" || $dateHeure == "" || $latitude == "" || $longitude == "" || $altitude == "" || $rythmeCardio == ""  )
