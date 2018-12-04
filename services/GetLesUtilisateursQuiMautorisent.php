@@ -109,7 +109,7 @@ function creerFluxXML($msg, $lesUtilisateurs)
     $doc = new DOMDocument();
 
     // specifie la version et le type d'encodage
-    $doc->version = '1.0';
+    $doc->xmlVersion = '1.0';
     $doc->encoding = 'UTF-8';
 
     // crée un commentaire et l'encode en UTF-8
