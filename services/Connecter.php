@@ -1,7 +1,7 @@
 <?php
 // Projet TraceGPS - services web
 // fichier : services/Connecter.php
-// Dernière mise à jour : 29/9/2018 par Jim
+// Dernière mise à jour : 25/8/2018 par Jim
 
 // Rôle : ce service permet à un utilisateur de s'authentifier
 // Le service web doit recevoir 3 paramètres :
@@ -26,18 +26,18 @@ $dao = new DAO();
 // la fonction $_REQUEST récupère par défaut le contenu des variables $_GET, $_POST, $_COOKIE
 if ( empty ($_REQUEST ["pseudo"]) == true)  $pseudo = "";  else   $pseudo = $_REQUEST ["pseudo"];
 if ( empty ($_REQUEST ["mdpSha1"]) == true)  $mdpSha1 = "";  else   $mdpSha1 = $_REQUEST ["mdpSha1"];
-if ( empty ($_REQUEST ["lang"]) == true) $lang = "";  else $lang = strtolower($_REQUEST ["lang"]);
+if ( empty ($_REQUEST["lang"]) == true) $lang = "";  else $lang = strtolower($_REQUEST["lang"]);
 // "xml" par défaut si le paramètre lang est absent ou incorrect
 if ($lang != "json") $lang = "xml";
 
 // Contrôle de la présence des paramètres
 if ( $pseudo == "" || $mdpSha1 == "" )
-{	$msg = "Erreur : données incomplètes.";
+{	$msg = "Erreur : données incomplètes ou incorrectes !";
 }
 else
 {	$niveauConnexion = $dao->getNiveauConnexion($pseudo, $mdpSha1);
 	
-	if ( $niveauConnexion == 0 ) $msg = "Erreur : authentification incorrecte.";	
+	if ( $niveauConnexion == 0 ) $msg = "Erreur : authentification incorrecte !";	
 	if ( $niveauConnexion == 1 ) $msg = "Utilisateur authentifié.";
 	if ( $niveauConnexion == 2 ) $msg = "Administrateur authentifié.";
 }
@@ -62,7 +62,7 @@ function creerFluxXML($msg)
          <?xml version="1.0" encoding="UTF-8"?>
          <!--Service web Connecter - BTS SIO - Lycée De La Salle - Rennes-->
          <data>
-            <reponse>Erreur : données incomplètes.</reponse>
+            <reponse>Utilisateur authentifié.</reponse>
          </data>
      */
     
@@ -70,7 +70,7 @@ function creerFluxXML($msg)
 	$doc = new DOMDocument();
 	
 	// specifie la version et le type d'encodage
-	$doc->xmlVersion = '1.0';
+	$doc->version = '1.0';
 	$doc->encoding = 'UTF-8';
 	
 	// crée un commentaire et l'encode en UTF-8
@@ -98,11 +98,11 @@ function creerFluxXML($msg)
 function creerFluxJSON($msg)
 {
     /* Exemple de code JSON
-         {
-             "data":{
-                "reponse": "authentification incorrecte."
-             }
+     {
+         "data":{
+            "reponse":"Utilisateur authentifi\u00e9."
          }
+     }
      */
     
     // construction de l'élément "data"

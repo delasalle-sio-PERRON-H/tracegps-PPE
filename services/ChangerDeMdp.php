@@ -1,7 +1,7 @@
 <?php
 // Projet TraceGPS - services web
 // fichier :  services/ChangerDeMdp.php
-// Dernière mise à jour : 29/9/2018 par Jim
+// Dernière mise à jour : 29/8/2018 par Jim
 
 // Rôle : ce service permet à un utilisateur de changer son mot de passe
 // Le service web doit recevoir 5 paramètres :
@@ -30,40 +30,40 @@ if ( empty ($_REQUEST ["pseudo"]) == true) $pseudo = "";  else $pseudo = $_REQUE
 if ( empty ($_REQUEST ["mdpSha1"]) == true)  $mdpSha1 = "";  else $mdpSha1 = $_REQUEST ["mdpSha1"];
 if ( empty ($_REQUEST ["nouveauMdp"]) == true) $nouveauMdp = "";  else $nouveauMdp = $_REQUEST ["nouveauMdp"];
 if ( empty ($_REQUEST ["confirmationMdp"]) == true) $confirmationMdp = "";  else $confirmationMdp = $_REQUEST ["confirmationMdp"];
-if ( empty ($_REQUEST ["lang"]) == true) $lang = "";  else $lang = strtolower($_REQUEST ["lang"]);
+if ( empty ($_REQUEST["lang"]) == true) $lang = "";  else $lang = strtolower($_REQUEST["lang"]);
 // "xml" par défaut si le paramètre lang est absent ou incorrect
 if ($lang != "json") $lang = "xml";
 
 // Contrôle de la présence des paramètres
 if ( $pseudo == "" || $mdpSha1 == "" || $nouveauMdp == "" || $confirmationMdp == "" ) {
-    $msg = "Erreur : données incomplètes.";
+    $msg = "Erreur : données incomplètes !";
 }
 else {
     if ( strlen($nouveauMdp) < 8 ) {
-        $msg = 'Erreur : le mot de passe doit comporter au moins 8 caractères.';
+        $msg = 'Erreur : le mot de passe doit comporter au moins 8 caractères !';
     }
     else {
     	if ( $nouveauMdp != $confirmationMdp ) {
-    	    $msg = "Erreur : le nouveau mot de passe et sa confirmation sont différents.";
+    	    $msg = "Erreur : le nouveau mot de passe et sa confirmation sont différents !";
     	}
     	else {
     		if ( $dao->getNiveauConnexion($pseudo, $mdpSha1) == 0 ) {
-    			$msg = "Erreur : authentification incorrecte.";
+    			$msg = "Erreur : authentification incorrecte !";
     		}
     		else {
     			// enregistre le nouveau mot de passe de l'utilisateur dans la bdd après l'avoir codé en sha1
     		    $ok = $dao->modifierMdpUtilisateur ($pseudo, $nouveauMdp);
     		    if ( ! $ok ) {
-    		        $msg = "Erreur : problème lors de l'enregistrement du mot de passe.";
+    		        $msg = "Erreur : problème lors de l'enregistrement du mot de passe !";
     		    }
     		    else {
-    		        // envoie un courriel  à l'utilisateur avec son nouveau mot de passe 
+        			// envoie un mail à l'utilisateur avec son nouveau mot de passe 
     		        $ok = $dao->envoyerMdp ($pseudo, $nouveauMdp);
     		        if ( ! $ok ) {
-        			    $msg = "Enregistrement effectué ; l'envoi du courriel  de confirmation a rencontré un problème.";
+        			    $msg = "Enregistrement effectué ; l'envoi du mail de confirmation a rencontré un problème.";
     		        }
     		        else {
-        			    $msg = "Enregistrement effectué ; vous allez recevoir un courriel  de confirmation.";
+        			    $msg = "Enregistrement effectué ; vous allez recevoir un mail de confirmation.";
     		        }
     		    }
     		}
@@ -92,7 +92,7 @@ function creerFluxXML($msg)
         <?xml version="1.0" encoding="UTF-8"?>
         <!--Service web ChangerDeMdp - BTS SIO - Lycée De La Salle - Rennes-->
         <data>
-            <reponse>Erreur : authentification incorrecte.</reponse>
+            <reponse>Erreur : authentification incorrecte !</reponse>
         </data>
      */
     
@@ -100,7 +100,7 @@ function creerFluxXML($msg)
 	$doc = new DOMDocument();
 	
 	// specifie la version et le type d'encodage
-	$doc->xmlVersion = '1.0';
+	$doc->version = '1.0';
 	$doc->encoding = 'UTF-8';
 	
 	// crée un commentaire et l'encode en UTF-8
@@ -130,7 +130,7 @@ function creerFluxJSON($msg)
     /* Exemple de code JSON
          {
              "data": {
-                "reponse": "Erreur : authentification incorrecte."
+                "reponse": "Erreur : authentification incorrecte !"
              }
          }
      */

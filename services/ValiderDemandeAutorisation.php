@@ -1,7 +1,7 @@
 <?php
 // Projet TraceGPS - services web
 // fichier :  services/ValiderDemandeAutorisation.php
-// Dernière mise à jour : 8/11/2018 par Jim
+// Dernière mise à jour : 14/1/2018 par Jim
 
 // Rôle : ce service web permet à un utilisateur destinataire d'accepter ou de rejeter une demande d'autorisation provenant d'un utilisateur demandeur
 // il envoie un mail au demandeur avec la décision de l'utilisateur destinataire
@@ -13,7 +13,7 @@
 //    d : la decision 1=oui, 0=non ($decision)
 
 // Les paramètres peuvent être passés par la méthode GET (pratique pour les tests, mais à éviter en exploitation) :
-//     http://<hébergeur>/ValiderDemandeAutorisation.php?a=13e3668bbee30b004380052b086457b014504b3e&b=oxygen&c=europa&d=1
+//     http://<hébergeur>/ValiderDemandeAutorisation.php?a=b8877d2b9373d4fc7...9407367aef5bc1&b=alexcuzbidon&c=yvanpascher&d=1
 
 // Les paramètres peuvent être passés par la méthode POST (à privilégier en exploitation pour la confidentialité des données) :
 //     http://<hébergeur>/ValiderDemandeAutorisation.php
@@ -29,7 +29,7 @@ if ( empty ($_REQUEST ["d"]) == true)  $decision = "";  else   $decision = $_REQ
 			 
 // Contrôle de la présence et de la correction des paramètres
 if ( $mdpSha1 == "" || $pseudoAutorisant == "" || $pseudoAutorise == "" || ( $decision != 0 && $decision != 1 ) )
-{	$message = "Erreur : données incomplètes ou incorrectes.";
+{	$message = "Données incomplètes ou incorrectes !";
 }
 else
 {	// connexion du serveur web à la base MySQL
@@ -41,7 +41,7 @@ else
 	$niveauConnexion = $dao->getNiveauConnexion($pseudoAutorisant, $mdpSha1);
 
 	if ( $niveauConnexion == 0 )
-	{	$message = "Erreur : authentification incorrecte.";
+	{	$message = "Authentification incorrecte !";
 	}
 	else
 	{	$utilisateurDemandeur = $dao->getUnUtilisateur($pseudoAutorise);
@@ -51,7 +51,7 @@ else
         $adrMailDemandeur = $utilisateurDemandeur->getAdrMail();
         
         if ($dao->autoriseAConsulter($idAutorisant, $idAutorise))
-        {	$message = "Erreur : autorisation déjà accordée.";
+        {	$message = "Autorisation déjà accordée !";
         }
         else 
         {
@@ -59,7 +59,7 @@ else
     		{   // enregistrement de l'autorisation dans la bdd
     		    $ok = $dao->creerUneAutorisation($idAutorisant, $idAutorise);
     		    if ( ! $ok ) 
-    		    {   $message = "Erreur : problème lors de l'enregistrement.";
+    		    {   $message = "Problème lors de l'enregistrement !";
     		    }
     		    else 
     		    {   // envoi d'un mail d'acceptation à l'intéressé
@@ -71,7 +71,7 @@ else
         			$contenuMail .= "L'administrateur du système TraceGPS";
         			$ok = Outils::envoyerMail($adrMailDemandeur, $sujetMail, $contenuMail, $ADR_MAIL_EMETTEUR);
         			if ( ! $ok )
-        			    $message = "Erreur : l'envoi du courriel au demandeur a rencontré un problème.";
+        			    $message = "L'envoi du courriel au demandeur a rencontré un problème !";
         			else
         			    $message = "Autorisation enregistrée.<br>Le demandeur va recevoir un courriel de confirmation.";
         		}
@@ -86,7 +86,7 @@ else
     		    $contenuMail .= "L'administrateur du système TraceGPS";
     		    $ok = Outils::envoyerMail($adrMailDemandeur, $sujetMail, $contenuMail, $ADR_MAIL_EMETTEUR);
     			if ( ! $ok )
-    			    $message = "Erreur : l'envoi du courriel au demandeur a rencontré un problème.";
+    			    $message = "L'envoi du courriel au demandeur a rencontré un problème !";
 			    else
 			        $message = "Autorisation refusée.<br>Le demandeur va recevoir un courriel de confirmation.";
     		}	

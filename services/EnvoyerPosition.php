@@ -1,22 +1,19 @@
 <?php
 // Projet TraceGPS - services web
-// fichier : services/GetTousLesUtilisateurs.php
-// Dernière mise à  jour : 27/11/2018 par Coubrun
+// fichier :  services/EnvoyerPosition.php
+// Dernière mise à jour : 7/5/2018 par Jim
 
-//Rôle : ce service web permet à un utilisateur d'envoyer sa position
-
-//Paramètres à fournir :
-//	pseudo : le pseudo de l'utilisateur
-//	mdpSha1 : le mot de passe de l'utilisateur hashé en sha1
-//	idTrace : l'id de la trace à consulter
-//	dateHeure : la date et l'heure au point de passage (format 'Y-m-d H:i:s')
-//	latitude : latitude du point de passage
-//	longitude : longitude du point de passage
-//	altitude : altitude du point de passage
-//	rythmeCardio : rythme cardiaque au point de passage (ou 0 si le rythme n'est pas mesurable)
-//	lang : le langage utilisé pour le flux de données ("xml" ou "json")
-
-// Le service retourne un flux de données XML contenant un compte-rendu d'exécution ainsi que la synthèse et la liste des points du parcours
+// Rôle : ce service permet à un utilisateur d'envoyer sa position
+// Le service web doit recevoir 8 paramètres :
+//     pseudo : le pseudo de l'utilisateur
+//     mdpSha1 : le mot de passe hashé en sha1
+//     idTrace : l'id de la trace dont le point fera partie
+//     dateHeure : la date et l'heure au point de passage (format 'Y-m-d H:i:s')
+//     latitude : latitude du point de passage
+//     longitude : longitude du point de passage
+//     altitude : altitude du point de passage
+//     rythmeCardio : rythme cardiaque au point de passage (ou 0 si le rythme n'est pas mesurable)
+// Le service retourne un flux de données XML contenant un compte-rendu d'exécution (avec l'id du point créé)
 
 // Les paramètres peuvent être passés par la méthode GET (pratique pour les tests, mais à éviter en exploitation) :
 //     http://<hébergeur>/EnvoyerPosition.php?pseudo=europa&mdpSha1=13e3668bbee30b004380052b086457b014504b3e&idTrace=26&dateHeure=2018-01-01 13:42:21&latitude=48.15&longitude=-1.68&altitude=50&rythmeCardio=80
@@ -45,105 +42,103 @@ if ( empty ($_REQUEST ["rythmeCardio"]) == true)  $rythmeCardio = "0";  else   $
 $unPoint = null;
 
 // Contrôle de la présence des paramètres
-if ( $pseudo == "" || $mdpSha1 == "" || $idTrace == "" || $dateHeure == "" || $latitude == "" || $longitude == "" || $altitude == "" || $rythmeCardio == ""  )
-{
-    $msg = "Erreur : données incomplètes !";
+if ( $pseudo == "" || $mdpSha1 == "" || $idTrace == "" || $dateHeure == "" || $latitude == "" || $longitude == "" || $altitude == "" || $rythmeCardio == "" )
+{	$msg = "Erreur : données incomplètes !";
+
+//     $msg .= "pseudo=" . $pseudo;
+//     $msg .= "mdpSha1=" . $mdpSha1;
+//     $msg .= "idTrace=" . $idTrace;
+//     $msg .= "dateHeure=" . $dateHeure;
+//     $msg .= "latitude=" . $latitude;
+//     $msg .= "longitude=" . $longitude;
+//     $msg .= "altitude=" . $altitude;
+//     $msg .= "rythmeCardio=" . $rythmeCardio;
 }
 else
-{
-    if ( $dao->getNiveauConnexion($pseudo, $mdpSha1) == 0 )
-    {
-        $msg = "Erreur : authentification incorrecte !";
+{	if ( $dao->getNiveauConnexion($pseudo, $mdpSha1) == 0 )
+    {   $msg = "Erreur : authentification incorrecte !";
     }
     else
-    {	// contrôle d'existence de idTrace
+    {   // récupération de la trace
         $laTrace = $dao->getUneTrace($idTrace);
         if ($laTrace == null)
-        {
-            $msg = "Erreur : le numéro de trace n'existe pas !";
+        {   $msg = "Erreur : le numéro de trace n'existe pas !";
         }
-        else
-        {
-            // récupération de l'id de l'utilisateur
+        else 
+        {   // récupération de l'id de l'utilisateur
             $idUtilisateur = $dao->getUnUtilisateur($pseudo)->getId();
-            if ( $idUtilisateur != $laTrace->getIdUtilisateur() )
-            {
-                $msg = "Erreur : le numéro de trace ne correspond pas à cet utilisateur !";
+            if ($idUtilisateur != $laTrace->getIdUtilisateur())
+            {   $msg = "Erreur : le numéro de trace ne correspond pas à cet utilisateur !";
             }
-            else
+            else 
             {
                 // calcul du numéro du point
                 $idPoint = $laTrace->getNombrePoints() + 1;
-                
                 // création du point
                 $tempsCumule = 0;
                 $distanceCumulee = 0;
                 $vitesse = 0;
                 $unPoint = new PointDeTrace($idTrace, $idPoint, $latitude, $longitude, $altitude, $dateHeure, $rythmeCardio, $tempsCumule, $distanceCumulee, $vitesse);
-                
                 // enregistrement du point
                 $ok = $dao->creerUnPointDeTrace($unPoint);
                 if (! $ok)
-                {
-                    $msg = "Erreur : problème lors de l'enregistrement du point !";
-                }// fin if
+                {   $msg = "Erreur : problème lors de l'enregistrement du point !";
+                }
                 else 
-                {
-                    $msg = "Point créé.";
-                }// fin else 5
-                
-            }//fin else 4
-        }//fin else 3
-    }//fin else 2
-}//fin else 1
-
-// ferme la connexion à MySQL
+                {   $msg = "Point créé.";
+                }
+            }
+        }
+    }
+}
+// ferme la connexion à MySQL :
 unset($dao);
 
 // création du flux XML en sortie
 creerFluxXML ($msg, $unPoint);
+
 // fin du programme (pour ne pas enchainer sur la fonction qui suit)
 exit;
+
+
 // création du flux XML en sortie
 function creerFluxXML($msg, $unPoint)
-{
-    // crée une instance de DOMdocument (DOM : Document Object Model)
-    $doc = new DOMDocument();
-    // specifie la version et le type d'encodage
-    $doc->xmlVersion = '1.0';
-    $doc->encoding = 'UTF-8';
-    
-    // crée un commentaire et l'encode en UTF-8
-    $elt_commentaire = $doc->createComment('Service web EnvoyerPosition - BTS SIO - Lycée De La Salle - Rennes');
-    // place ce commentaire à la racine du document XML
-    $doc->appendChild($elt_commentaire);
-    
-    // crée l'élément 'data' à la racine du document XML
-    $elt_data = $doc->createElement('data');
-    $doc->appendChild($elt_data);
-    
-    // place l'élément 'reponse' dans l'élément 'data'
-    $elt_reponse = $doc->createElement('reponse', $msg);
-    $elt_data->appendChild($elt_reponse);
-    
-    // place l'élément 'donnees' dans l'élément 'data'
-    $elt_donnees = $doc->createElement('donnees');
-    $elt_data->appendChild($elt_donnees);
-    
-    if ($unPoint != null)
-    {
-        // place l'id du point dans l'élément 'donnees'
-        $elt_id = $doc->createElement('id', $unPoint->getId());
-        $elt_donnees->appendChild($elt_id);
-    }// fin if
-    
-    // Mise en forme finale
-    $doc->formatOutput = true;
-    
-    // renvoie le contenu XML
-    echo $doc->saveXML();
-    return;
-    
-}// fin function
+{	// crée une instance de DOMdocument (DOM : Document Object Model)
+	$doc = new DOMDocument();	
 
+	// specifie la version et le type d'encodage
+	$doc->version = '1.0';
+	$doc->encoding = 'UTF-8';
+	
+// 	// crée un commentaire et l'encode en UTF-8
+// 	$elt_commentaire = $doc->createComment('Service web EnvoyerPosition - BTS SIO - Lycée De La Salle - Rennes');
+// 	// place ce commentaire à la racine du document XML
+// 	$doc->appendChild($elt_commentaire);
+		
+	// crée l'élément 'data' à la racine du document XML
+	$elt_data = $doc->createElement('data');
+	$doc->appendChild($elt_data);
+	
+	// place l'élément 'reponse' juste après l'élément 'data'
+	$elt_reponse = $doc->createElement('reponse', $msg);
+	$elt_data->appendChild($elt_reponse);
+	
+	// place l'élément 'donnees' dans l'élément 'data'
+	$elt_donnees = $doc->createElement('donnees');
+	$elt_data->appendChild($elt_donnees);
+	
+	if ($unPoint != null)
+	{
+    	// place l'id du point dans l'élément 'donnees'
+	    $elt_id = $doc->createElement('id', $unPoint->getId());
+	    $elt_donnees->appendChild($elt_id);
+	}
+	
+	// Mise en forme finale
+	$doc->formatOutput = true;
+	
+	// renvoie le contenu XML
+	echo $doc->saveXML();
+	return;
+}
 ?>
